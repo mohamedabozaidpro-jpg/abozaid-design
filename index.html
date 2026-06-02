@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>م. سامح أبوزيد | تصميم داخلي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Tajawal:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#0C0C0C;--bg2:#141414;--bg3:#1C1C1C;--bg4:#242424;
+  --line:#2A2A2A;--line2:#333;
+  --text:#E8E4DC;--text2:#9A9590;--text3:#5A5550;
+  --accent:#E8C87A;--accent2:#C4A452;--accent3:#8B6914;
+  --white:#F8F5EF;--red:#C0392B;--green:#27AE60;
+  --r:4px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.7;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--accent3);}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .6s,visibility .6s;}
+#loader.hide{opacity:0;visibility:hidden;}
+.loader-logo{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--accent);letter-spacing:6px;}
+.loader-bar{width:200px;height:2px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.loader-bar-fill{height:100%;background:var(--accent);width:0%;transition:width .1s;border-radius:2px;}
+
+/* PAGES */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;animation:pgIn .4s ease;}
+@keyframes pgIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* NAV */
+nav{position:fixed;top:0;right:0;left:0;z-index:800;padding:22px 64px;display:flex;align-items:center;justify-content:space-between;transition:all .4s;}
+nav.solid{background:rgba(12,12,12,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--line);padding:14px 64px;}
+.logo{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;color:var(--white);cursor:pointer;letter-spacing:3px;}
+.logo span{color:var(--accent);}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:.78rem;font-weight:500;letter-spacing:1.5px;cursor:pointer;transition:color .25s;text-transform:uppercase;}
+.nav-links a:hover,.nav-links a.active{color:var(--accent);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-ghost{padding:8px 20px;background:transparent;border:1px solid var(--line2);color:var(--text2);font-family:'Tajawal',sans-serif;font-size:.78rem;cursor:pointer;transition:all .25s;border-radius:var(--r);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-accent{padding:8px 20px;background:var(--accent);border:none;color:var(--bg);font-family:'Tajawal',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .25s;border-radius:var(--r);}
+.btn-accent:hover{background:var(--accent2);}
+.user-chip{display:flex;align-items:center;gap:8px;padding:6px 14px;background:var(--bg3);border:1px solid var(--line2);border-radius:20px;cursor:pointer;transition:all .25s;}
+.user-chip:hover{border-color:var(--accent);}
+.user-av{width:26px;height:26px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--bg);}
+.user-chip-name{font-size:.78rem;color:var(--text2);}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.ham span{width:22px;height:1.5px;background:var(--text);transition:all .3s;}
+
+/* HERO */
+.hero{height:100vh;position:relative;display:flex;align-items:flex-end;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;}
+.hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.32);}
+.hero-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,1) 0%,rgba(12,12,12,.2) 60%,transparent 100%);}
+.hero-content{position:relative;padding:0 64px 90px;max-width:860px;}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:22px;padding:7px 16px;background:rgba(232,200,122,.08);border:1px solid rgba(232,200,122,.2);border-radius:20px;}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.hero-badge-txt{font-size:.68rem;letter-spacing:3px;color:var(--accent);font-weight:600;text-transform:uppercase;}
+.hero-h1{font-family:'Syne',sans-serif;font-size:clamp(3.2rem,8vw,7rem);font-weight:800;line-height:.95;color:var(--white);margin-bottom:6px;letter-spacing:-3px;}
+.hero-h1-italic{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,6.5vw,5.8rem);font-weight:400;font-style:italic;color:var(--accent);display:block;margin-bottom:28px;letter-spacing:-1px;}
+.hero-p{font-size:.98rem;color:var(--text2);max-width:460px;margin-bottom:44px;font-weight:300;line-height:2;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-primary{padding:14px 40px;background:var(--accent);color:var(--bg);font-family:'Tajawal',sans-serif;font-weight:700;font-size:.9rem;border:none;cursor:pointer;transition:all .3s;border-radius:var(--r);}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-2px);}
+.btn-outline{padding:14px 40px;background:transparent;color:var(--white);font-family:'Tajawal',sans-serif;font-weight:500;font-size:.9rem;border:1px solid rgba(248,245,239,.2);cursor:pointer;transition:all .3s;border-radius:var(--r);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.hero-stats{position:absolute;bottom:90px;left:64px;display:flex;gap:52px;}
+.hstat .n{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--accent);line-height:1;}
+.hstat .l{font-size:.66rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:5px;}
+.hero-scroll{position:absolute;bottom:44px;right:64px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:.64rem;letter-spacing:3px;text-transform:uppercase;animation:bob 2.2s ease infinite;}
+.hscroll-bar{width:1px;height:48px;background:linear-gradient(var(--accent),transparent);}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(9px)}}
+
+/* SECTIONS */
+section{padding:100px 64px;}
+.sec-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px;}
+.sec-eyebrow-line{width:28px;height:1px;background:var(--accent);}
+.sec-eyebrow-txt{font-size:.66rem;letter-spacing:4px;color:var(--accent);font-weight:700;text-transform:uppercase;}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;color:var(--white);line-height:1.05;letter-spacing:-1px;}
+.sec-desc{color:var(--text2);margin-top:14px;max-width:520px;font-size:.93rem;line-height:1.9;}
+
+/* PORTFOLIO */
+.pf-filters{display:flex;gap:6px;margin-bottom:48px;flex-wrap:wrap;}
+.pff{padding:8px 22px;background:transparent;border:1px solid var(--line2);color:var(--text2);font-family:'Tajawal',sans-serif;font-size:.76rem;cursor:pointer;transition:all .25s;border-radius:20px;}
+.pff:hover,.pff.on{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:700;}
+.pgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;max-width:1400px;margin:0 auto;}
+.pcard{position:relative;overflow:hidden;cursor:pointer;border-radius:6px;background:var(--bg3);}
+.pcard.c1{grid-column:span 7;aspect-ratio:16/8;}
+.pcard.c2{grid-column:span 5;aspect-ratio:4/3;}
+.pcard.c3{grid-column:span 5;aspect-ratio:4/3;}
+.pcard.c4{grid-column:span 7;aspect-ratio:16/8;}
+.pcard.c5{grid-column:span 4;aspect-ratio:4/3;}
+.pcard.c6{grid-column:span 4;aspect-ratio:4/3;}
+.pcard.c7{grid-column:span 4;aspect-ratio:4/3;}
+.pcard img{width:100%;height:100%;object-fit:cover;transition:transform .8s ease;}
+.pcard:hover img{transform:scale(1.06);}
+.pcard-base{position:absolute;bottom:0;right:0;left:0;padding:22px;background:linear-gradient(to top,rgba(12,12,12,.78) 0%,transparent 100%);}
+.pcard-over{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.93) 0%,rgba(12,12,12,.1) 55%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:24px;opacity:0;transition:opacity .35s;}
+.pcard:hover .pcard-over{opacity:1;}
+.pcard-cat{font-size:.6rem;color:var(--accent);letter-spacing:3px;font-weight:700;text-transform:uppercase;margin-bottom:5px;}
+.pcard-name{font-family:'Syne',sans-serif;font-size:1.05rem;color:var(--white);font-weight:700;}
+.pcard-loc{color:var(--text2);font-size:.76rem;margin-top:4px;}
+.pcard-cta{margin-top:12px;display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:var(--accent);color:var(--bg);font-family:'Tajawal',sans-serif;font-size:.72rem;font-weight:700;border:none;cursor:pointer;border-radius:var(--r);}
+.ba-badge{position:absolute;top:12px;right:12px;background:var(--accent);color:var(--bg);font-size:.6rem;font-weight:700;padding:4px 10px;border-radius:12px;}
+
+/* SERVICES */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1px;background:var(--line);max-width:1400px;margin:0 auto;border:1px solid var(--line);}
+.svc{background:var(--bg2);padding:46px 34px;transition:background .3s;position:relative;overflow:hidden;}
+.svc::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transition:transform .4s;transform-origin:right;}
+.svc:hover{background:var(--bg3);}
+.svc:hover::before{transform:scaleX(1);}
+.svc-n{position:absolute;top:18px;left:18px;font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;color:rgba(232,200,122,.05);line-height:1;}
+.svc-icon{font-size:1.5rem;margin-bottom:18px;display:block;}
+.svc-title{font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--white);margin-bottom:10px;font-weight:700;}
+.svc-desc{color:var(--text2);font-size:.84rem;line-height:1.9;}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:1300px;margin:0 auto;border:1px solid var(--line);}
+.about-img-side{position:relative;overflow:hidden;}
+.about-img-side img{width:100%;height:100%;object-fit:cover;min-height:580px;display:block;}
+.about-img-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.5),transparent 60%);}
+.about-exp{position:absolute;bottom:28px;right:28px;background:var(--accent);padding:18px 24px;}
+.about-exp .n{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--bg);display:block;line-height:1;}
+.about-exp .l{font-size:.66rem;color:rgba(12,12,12,.65);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:4px;}
+.about-txt-side{background:var(--bg2);padding:60px;}
+.about-ew{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.about-ew-line{width:26px;height:1px;background:var(--accent);}
+.about-ew-txt{font-size:.66rem;letter-spacing:4px;color:var(--accent);font-weight:700;text-transform:uppercase;}
+.about-name{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--white);line-height:1.1;margin-bottom:18px;letter-spacing:-1px;}
+.about-p{color:var(--text2);line-height:1.9;margin-bottom:12px;font-size:.91rem;}
+.about-clients{display:flex;flex-wrap:wrap;gap:7px;margin-top:28px;}
+.aclient{padding:6px 14px;background:var(--bg3);border:1px solid var(--line2);color:var(--text2);font-size:.74rem;border-radius:var(--r);transition:all .25s;}
+.aclient:hover{border-color:var(--accent);color:var(--accent);}
+
+/* TESTIMONIALS */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;max-width:1300px;margin:0 auto;}
+.tcard{background:var(--bg2);border:1px solid var(--line);padding:38px;border-radius:6px;transition:border-color .3s;}
+.tcard:hover{border-color:var(--line2);}
+.tcard-q{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;color:var(--accent);opacity:.18;line-height:.7;margin-bottom:14px;}
+.tcard-stars{color:var(--accent);font-size:.8rem;letter-spacing:2px;margin-bottom:12px;}
+.tcard-txt{color:var(--text2);font-size:.88rem;line-height:1.9;margin-bottom:22px;}
+.tcard-author{display:flex;align-items:center;gap:11px;}
+.tcard-av{width:42px;height:42px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:.95rem;color:var(--bg);font-weight:700;flex-shrink:0;}
+.tcard-name{font-weight:700;color:var(--white);font-size:.88rem;}
+.tcard-role{color:var(--text3);font-size:.74rem;margin-top:2px;}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:0;max-width:1300px;margin:0 auto;border:1px solid var(--line);}
+.contact-info{background:var(--accent);padding:56px;}
+.ci-title{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;color:var(--bg);line-height:1.2;margin-bottom:14px;}
+.ci-desc{color:rgba(12,12,12,.6);line-height:1.8;margin-bottom:36px;font-size:.88rem;}
+.ci-list{display:flex;flex-direction:column;gap:20px;}
+.ci-item{display:flex;gap:12px;}
+.ci-icon{width:40px;height:40px;background:rgba(12,12,12,.1);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;border-radius:var(--r);}
+.ci-lbl{font-size:.62rem;color:rgba(12,12,12,.5);letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-bottom:2px;}
+.ci-val{color:var(--bg);font-size:.86rem;font-weight:600;}
+.social-btns{display:flex;gap:8px;margin-top:28px;flex-wrap:wrap;}
+.soc-btn{width:38px;height:38px;background:rgba(12,12,12,.1);display:flex;align-items:center;justify-content:center;border-radius:var(--r);cursor:pointer;transition:all .25s;text-decoration:none;font-size:.9rem;}
+.soc-btn:hover{background:rgba(12,12,12,.2);}
+.cform-side{background:var(--bg2);padding:56px;}
+.cform{display:flex;flex-direction:column;gap:13px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fg label{font-size:.64rem;color:var(--text3);letter-spacing:1.5px;font-weight:700;text-transform:uppercase;}
+.fg input,.fg textarea,.fg select{background:var(--bg3);border:1px solid var(--line2);color:var(--text);font-family:'Tajawal',sans-serif;font-size:.88rem;padding:11px 13px;outline:none;transition:border-color .25s;border-radius:var(--r);width:100%;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--accent);}
+.fg textarea{resize:vertical;min-height:120px;}
+.fg select option{background:var(--bg3);}
+.ferr{font-size:.7rem;color:var(--red);margin-top:2px;display:none;}
+.fsuccess{padding:11px 15px;background:rgba(39,174,96,.1);border:1px solid var(--green);color:var(--green);font-size:.82rem;border-radius:var(--r);display:none;}
+
+/* AUTH */
+.auth-wrap{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;}
+.auth-left{background:var(--bg2);padding:56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+.auth-left-img{position:absolute;inset:0;}
+.auth-left-img img{width:100%;height:100%;object-fit:cover;opacity:.1;}
+.auth-brand{position:relative;font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);letter-spacing:3px;}
+.auth-brand span{color:var(--accent);}
+.auth-tagline{position:relative;}
+.auth-tagline-h{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--white);line-height:1.2;margin-bottom:12px;letter-spacing:-1px;}
+.auth-tagline-p{color:var(--text2);font-size:.86rem;line-height:1.8;}
+.auth-right{background:var(--bg);padding:56px;display:flex;align-items:center;justify-content:center;}
+.auth-box{width:100%;max-width:390px;}
+.auth-tabs{display:flex;margin-bottom:28px;border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;}
+.auth-tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text2);background:var(--bg2);transition:all .25s;border:none;font-family:'Tajawal',sans-serif;}
+.auth-tab.on{background:var(--accent);color:var(--bg);}
+.auth-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--white);margin-bottom:5px;}
+.auth-sub{color:var(--text3);font-size:.8rem;margin-bottom:28px;}
+.auth-err{padding:9px 13px;background:rgba(192,57,43,.09);border:1px solid rgba(192,57,43,.25);color:var(--red);font-size:.78rem;border-radius:var(--r);display:none;}
+.auth-switch{text-align:center;margin-top:16px;font-size:.8rem;color:var(--text3);}
+.auth-switch a{color:var(--accent);cursor:pointer;font-weight:700;}
+
+/* OWNER LOGIN */
+.owner-login-wrap{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;}
+
+/* USER DASH */
+.dash-top{background:var(--bg2);padding:80px 64px 0;border-bottom:1px solid var(--line);}
+.dash-top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;}
+.dash-greeting{font-size:.66rem;letter-spacing:3px;color:var(--accent);font-weight:700;text-transform:uppercase;margin-bottom:7px;}
+.dash-name{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:var(--white);}
+.dash-sub{color:var(--text3);font-size:.82rem;margin-top:4px;}
+.dash-tabs{display:flex;gap:2px;flex-wrap:wrap;}
+.dtab-btn{padding:9px 20px;background:transparent;border:1px solid var(--line2);color:var(--text2);font-family:'Tajawal',sans-serif;font-size:.76rem;cursor:pointer;transition:all .25s;border-radius:var(--r);}
+.dtab-btn.on{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:700;}
+.dash-body{padding:36px 64px;background:var(--bg);min-height:500px;}
+.dtab{display:none;}.dtab.on{display:block;}
+.ustats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+.ustat{background:var(--bg2);border:1px solid var(--line);padding:22px;border-radius:6px;}
+.ustat .n{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:var(--accent);}
+.ustat .l{color:var(--text3);font-size:.72rem;margin-top:3px;letter-spacing:.5px;text-transform:uppercase;}
+.req-list{display:flex;flex-direction:column;gap:9px;}
+.req-item{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:16px 20px;display:flex;align-items:center;gap:14px;}
+.req-info{flex:1;}
+.req-title{color:var(--white);font-weight:700;margin-bottom:2px;font-size:.88rem;}
+.req-meta{color:var(--text3);font-size:.74rem;}
+.req-status{padding:4px 11px;border-radius:12px;font-size:.66rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.st-new{background:rgba(232,200,122,.1);color:var(--accent);}
+.st-read{background:rgba(39,174,96,.1);color:var(--green);}
+.saved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
+.saved-card{background:var(--bg2);border:1px solid var(--line);border-radius:6px;overflow:hidden;cursor:pointer;transition:all .25s;}
+.saved-card:hover{border-color:var(--line2);transform:translateY(-2px);}
+.saved-card img{width:100%;height:125px;object-fit:cover;}
+.saved-card-info{padding:11px;}
+.saved-card-cat{font-size:.6rem;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+.saved-card-title{font-size:.84rem;color:var(--white);font-weight:700;}
+
+/* OWNER PANEL */
+.owner-top{background:var(--bg2);padding:80px 64px 0;border-bottom:1px solid var(--line);}
+.owner-top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.owner-panel-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);}
+.owner-tabs{display:flex;gap:0;flex-wrap:wrap;overflow-x:auto;}
+.otab-btn{padding:10px 20px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Tajawal',sans-serif;font-size:.78rem;cursor:pointer;transition:all .25s;white-space:nowrap;position:relative;}
+.otab-btn.on{color:var(--accent);border-bottom-color:var(--accent);}
+.otab-btn:hover{color:var(--text);}
+.obadge{position:absolute;top:5px;left:3px;background:var(--red);color:white;font-size:.58rem;font-weight:700;padding:1px 5px;border-radius:8px;}
+.owner-body{display:grid;grid-template-columns:210px 1fr;min-height:600px;}
+.owner-sidebar{background:var(--bg2);border-left:1px solid var(--line);padding:18px 0;}
+.osi{display:flex;align-items:center;gap:9px;padding:10px 20px;color:var(--text2);cursor:pointer;transition:all .25s;font-size:.8rem;border-right:2px solid transparent;position:relative;}
+.osi:hover,.osi.on{color:var(--accent);background:rgba(232,200,122,.04);border-right-color:var(--accent);}
+.osibadge{position:absolute;left:14px;top:50%;transform:translateY(-50%);background:var(--red);color:white;font-size:.58rem;font-weight:700;padding:1px 5px;border-radius:8px;}
+.owner-content{padding:28px 36px;background:var(--bg);}
+.otab{display:none;}.otab.on{display:block;}
+.ostats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+.ostat{background:var(--bg2);border:1px solid var(--line);padding:20px;border-radius:6px;}
+.ostat .n{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:var(--accent);}
+.ostat .l{color:var(--text3);font-size:.7rem;margin-top:3px;text-transform:uppercase;letter-spacing:.5px;}
+.o-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--white);margin-bottom:16px;letter-spacing:-.5px;}
+.ocard{background:var(--bg2);border:1px solid var(--line);padding:22px;margin-bottom:16px;border-radius:6px;}
+
+/* CONTENT EDITOR */
+.content-section{margin-bottom:28px;}
+.content-section-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--accent);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--line);letter-spacing:1px;text-transform:uppercase;}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.content-grid.full{grid-template-columns:1fr;}
+.content-grid.three{grid-template-columns:1fr 1fr 1fr;}
+
+/* MESSAGES */
+.mlist{display:flex;flex-direction:column;gap:11px;}
+.mitem{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:18px 20px;transition:border-color .25s;}
+.mitem.unread{border-right:2px solid var(--accent);}
+.mitem:hover{border-color:var(--line2);}
+.mhead{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:11px;gap:9px;flex-wrap:wrap;}
+.msender{display:flex;align-items:center;gap:10px;}
+.mav{width:38px;height:38px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:.88rem;color:var(--bg);font-weight:700;flex-shrink:0;}
+.mname{color:var(--white);font-weight:700;font-size:.86rem;}
+.mcontact{color:var(--text3);font-size:.72rem;margin-top:2px;}
+.mcontact a{color:var(--accent2);text-decoration:none;}
+.mdate{color:var(--text3);font-size:.68rem;}
+.mtype-badge{display:inline-block;padding:3px 8px;background:rgba(232,200,122,.08);color:var(--accent);font-size:.62rem;letter-spacing:1px;font-weight:700;border-radius:var(--r);margin-top:3px;}
+.mbody{color:var(--text2);font-size:.84rem;line-height:1.8;margin-bottom:11px;}
+.mfoot{display:flex;gap:7px;flex-wrap:wrap;}
+.mbtn{padding:5px 12px;font-family:'Tajawal',sans-serif;font-size:.7rem;cursor:pointer;transition:all .25s;border-radius:var(--r);}
+.mbtn-read{background:transparent;border:1px solid rgba(39,174,96,.3);color:var(--green);}
+.mbtn-read:hover{background:rgba(39,174,96,.08);}
+.mbtn-del{background:transparent;border:1px solid rgba(192,57,43,.3);color:var(--red);}
+.mbtn-del:hover{background:rgba(192,57,43,.07);}
+.mbtn-wa{background:transparent;border:1px solid rgba(37,211,102,.3);color:#25d366;text-decoration:none;display:inline-block;}
+.mbtn-wa:hover{background:rgba(37,211,102,.07);}
+.mbtn-call{background:transparent;border:1px solid rgba(232,200,122,.2);color:var(--accent2);text-decoration:none;display:inline-block;}
+.udot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:4px;vertical-align:middle;}
+.empty-st{text-align:center;padding:44px;color:var(--text3);}
+.empty-st .ei{font-size:2.2rem;margin-bottom:10px;display:block;}
+
+/* PROJ LIST */
+.pli{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:13px 16px;display:flex;align-items:center;gap:13px;margin-bottom:9px;transition:border-color .25s;}
+.pli:hover{border-color:var(--line2);}
+.pli-thumb{width:64px;height:48px;object-fit:cover;border-radius:var(--r);flex-shrink:0;}
+.pli-info{flex:1;}
+.pli-title{color:var(--white);font-weight:700;margin-bottom:2px;font-size:.86rem;}
+.pli-cat{color:var(--accent2);font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;}
+.pli-actions{display:flex;gap:7px;}
+.btn-edit{padding:5px 12px;border:1px solid rgba(232,200,122,.22);color:var(--accent2);background:transparent;font-family:'Tajawal',sans-serif;font-size:.7rem;cursor:pointer;transition:all .25s;border-radius:var(--r);}
+.btn-edit:hover{background:rgba(232,200,122,.07);}
+.btn-del{padding:5px 12px;border:1px solid rgba(192,57,43,.22);color:var(--red);background:transparent;font-family:'Tajawal',sans-serif;font-size:.7rem;cursor:pointer;transition:all .25s;border-radius:var(--r);}
+.btn-del:hover{background:rgba(192,57,43,.07);}
+
+/* MODAL */
+.mov{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:30px;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(8px);}
+.mov.open{opacity:1;pointer-events:all;}
+.mbox{background:var(--bg2);max-width:1000px;width:100%;max-height:88vh;overflow-y:auto;border-radius:8px;border:1px solid var(--line);transform:translateY(20px);transition:transform .35s;}
+.mov.open .mbox{transform:translateY(0);}
+.mhero{position:relative;height:380px;overflow:hidden;border-radius:8px 8px 0 0;}
+.mhero img{width:100%;height:100%;object-fit:cover;}
+.mclose{position:absolute;top:14px;left:14px;width:36px;height:36px;background:rgba(12,12,12,.8);border:1px solid var(--line2);color:var(--text);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;border-radius:50%;z-index:10;}
+.mclose:hover{background:var(--accent);color:var(--bg);border-color:var(--accent);}
+.mbody{padding:36px;}
+.mcat{font-size:.62rem;color:var(--accent);letter-spacing:3px;font-weight:700;text-transform:uppercase;margin-bottom:7px;}
+.mtitle{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;color:var(--white);margin-bottom:16px;letter-spacing:-1px;}
+.mmeta{display:flex;gap:26px;margin-bottom:22px;flex-wrap:wrap;}
+.mmeta-i label{font-size:.6rem;color:var(--text3);letter-spacing:2px;font-weight:700;display:block;margin-bottom:2px;text-transform:uppercase;}
+.mmeta-i span{color:var(--text);font-size:.82rem;}
+.mdesc{color:var(--text2);line-height:1.9;margin-bottom:26px;font-size:.9rem;}
+.msave-row{margin-bottom:16px;}
+.mgallery{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.mgallery img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r);}
+
+/* BA SLIDER */
+.bawrap{position:relative;overflow:hidden;width:100%;height:100%;cursor:col-resize;}
+.baafter,.babefore{position:absolute;top:0;left:0;width:100%;height:100%;}
+.baafter img,.babefore img{width:100%;height:100%;object-fit:cover;}
+.babefore{clip-path:inset(0 50% 0 0);}
+.bahandle{position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+.bacircle{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.82rem;font-weight:900;user-select:none;}
+.balbl{position:absolute;top:11px;font-size:.6rem;letter-spacing:2px;font-weight:700;background:rgba(12,12,12,.75);padding:4px 9px;color:var(--accent);border-radius:var(--r);}
+.balbl.b{right:11px;}.balbl.a{left:11px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--bg3);border:1px solid var(--line2);color:var(--text);padding:11px 18px;font-size:.82rem;border-radius:6px;transform:translateY(80px);opacity:0;transition:all .35s;pointer-events:none;max-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.5);}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* MOB */
+.mobmenu{position:fixed;inset:0;z-index:799;background:var(--bg);padding:80px 30px 30px;display:flex;flex-direction:column;gap:20px;transform:translateX(110%);transition:transform .38s;}
+.mobmenu.open{transform:translateX(0);}
+.mobmenu a{color:var(--text);text-decoration:none;font-size:1.1rem;font-weight:600;cursor:pointer;padding-bottom:14px;border-bottom:1px solid var(--line);font-family:'Syne',sans-serif;}
+.mobmenu a:hover{color:var(--accent);}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--line);padding:48px 64px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.footer-logo{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--white);letter-spacing:2px;}
+.footer-logo span{color:var(--accent);}
+.flinks{display:flex;gap:22px;flex-wrap:wrap;}
+.flinks a{color:var(--text3);text-decoration:none;font-size:.76rem;transition:color .25s;cursor:pointer;letter-spacing:.5px;}
+.flinks a:hover{color:var(--accent);}
+.fcopy{color:var(--text3);font-size:.7rem;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(232,200,122,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  nav{padding:14px 28px;}section{padding:72px 28px;}
+  .hero-content{padding:0 28px 64px;}.hero-stats{left:28px;}.hero-scroll{right:28px;}
+  .pgrid{grid-template-columns:1fr 1fr;}.pcard.c1,.pcard.c2,.pcard.c3,.pcard.c4,.pcard.c5,.pcard.c6,.pcard.c7{grid-column:span 1;aspect-ratio:4/3;}
+  .about-grid{grid-template-columns:1fr;}.contact-grid{grid-template-columns:1fr;}
+  .auth-wrap,.owner-login-wrap{grid-template-columns:1fr;}.auth-left{display:none;}
+  .owner-body{grid-template-columns:1fr;}.owner-sidebar{display:none;}
+  .ostats{grid-template-columns:repeat(2,1fr);}
+  .dash-body{padding:28px 28px;}.owner-content{padding:22px 18px;}
+  footer{padding:40px 28px;}
+}
+@media(max-width:768px){
+  nav{padding:12px 18px;}.nav-links,.nav-right{display:none;}.ham{display:flex;}
+  section{padding:52px 18px;}.pgrid{grid-template-columns:1fr;}
+  .frow{grid-template-columns:1fr;}.content-grid{grid-template-columns:1fr;}.content-grid.three{grid-template-columns:1fr;}
+  .hero-h1{font-size:2.8rem;letter-spacing:-2px;}.hero-stats{gap:24px;}
+  .hero-btns{flex-direction:column;align-items:flex-start;}
+  .mgallery{grid-template-columns:1fr 1fr;}.mbody{padding:22px 14px;}
+  .ustats{grid-template-columns:1fr;}.ostats{grid-template-columns:1fr 1fr;}
+  footer{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo" id="loader-logo">ABOZAID</div>
+  <div class="loader-bar"><div class="loader-bar-fill" id="loader-fill"></div></div>
+</div>
+
+<nav id="mainNav">
+  <span class="logo" id="nav-logo" onclick="goPage('home')">ABOZAID<span>.</span></span>
+  <ul class="nav-links">
+    <li><a onclick="goPage('home')" data-pg="home" class="active">الرئيسية</a></li>
+    <li><a onclick="goPage('portfolio')" data-pg="portfolio">المشاريع</a></li>
+    <li><a onclick="goPage('services')" data-pg="services">الخدمات</a></li>
+    <li><a onclick="goPage('about')" data-pg="about">من نحن</a></li>
+    <li><a onclick="goPage('testimonials')" data-pg="testimonials">العملاء</a></li>
+    <li><a onclick="goPage('contact')" data-pg="contact">تواصل</a></li>
+  </ul>
+  <div class="nav-right" id="navRight">
+    <button class="btn-ghost" onclick="goPage('auth')">دخول</button>
+    <button class="btn-accent" onclick="goPage('auth');setAuthTab('reg')">تسجيل</button>
+  </div>
+  <button class="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobmenu" id="mobMenu">
+  <a onclick="goPage('home');closeMob()">الرئيسية</a>
+  <a onclick="goPage('portfolio');closeMob()">المشاريع</a>
+  <a onclick="goPage('services');closeMob()">الخدمات</a>
+  <a onclick="goPage('about');closeMob()">من نحن</a>
+  <a onclick="goPage('contact');closeMob()">تواصل</a>
+  <a onclick="goPage('auth');closeMob()">تسجيل الدخول</a>
+  <a onclick="goOwnerLogin()">⚙ صاحب العمل</a>
+</div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-bg"><img id="hero-bg-img" src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1600&q=85" alt=""></div>
+    <div class="hero-ov"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><div class="hero-badge-dot"></div><span class="hero-badge-txt" id="hero-badge-txt">مصمم داخلي معتمد</span></div>
+      <h1 class="hero-h1" id="hero-h1">نصنع</h1>
+      <span class="hero-h1-italic" id="hero-subtitle">مساحات تحكي قصتك</span>
+      <p class="hero-p" id="hero-desc">أكثر من ١٥ عاماً من الإبداع في تصميم الفضاءات السكنية والتجارية واستوديوهات البث الاحترافية</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="goPage('portfolio')">استعرض الأعمال</button>
+        <button class="btn-outline" onclick="goPage('contact')">ابدأ مشروعك</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><span class="n" id="stat1-num">+200</span><span class="l" id="stat1-lbl">مشروع منجز</span></div>
+      <div class="hstat"><span class="n" id="stat2-num">15</span><span class="l" id="stat2-lbl">سنة خبرة</span></div>
+      <div class="hstat"><span class="n" id="stat3-num">+50</span><span class="l" id="stat3-lbl">عميل</span></div>
+    </div>
+    <div class="hero-scroll"><div class="hscroll-bar"></div><span>Scroll</span></div>
+  </div>
+  <section>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:44px;flex-wrap:wrap;gap:18px;">
+      <div><div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-txt">أحدث الأعمال</span></div><h2 class="sec-title">مشاريع مختارة</h2></div>
+      <button class="btn-ghost" onclick="goPage('portfolio')">عرض الكل ←</button>
+    </div>
+    <div class="pgrid" id="home-grid"></div>
+  </section>
+  <section style="background:var(--bg2);padding-top:80px;padding-bottom:80px;">
+    <div style="text-align:center;margin-bottom:52px;">
+      <div class="sec-eyebrow" style="justify-content:center;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-txt">خدماتنا</span><div class="sec-eyebrow-line"></div></div>
+      <h2 class="sec-title">ما نقدمه</h2>
+    </div>
+    <div class="svc-grid" id="home-svc-grid"></div>
+    <div style="text-align:center;margin-top:32px;"><button class="btn-ghost" onclick="goPage('services')">تفاصيل الخدمات ←</button></div>
+  </section>
+  <footer>
+    <div class="footer-logo" id="footer-logo">ABOZAID<span>.</span></div>
+    <div class="flinks">
+      <a onclick="goPage('portfolio')">المشاريع</a><a onclick="goPage('services')">الخدمات</a>
+      <a onclick="goPage('about')">من نحن</a><a onclick="goPage('contact')">تواصل</a>
+    </div>
+    <p class="fcopy" id="footer-copy">© 2025 م. سامح أبوزيد</p>
+  </footer>
+</div>
+
+<!-- PORTFOLIO -->
+<div class="page" id="page-portfolio">
+  <div style="height:88px;background:var(--bg)"></div>
+  <section>
+    <div style="margin-bottom:44px;"><div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-txt">معرض الأعمال</span></div><h2 class="sec-title">جميع المشاريع</h2></div>
+    <div class="pf-filters">
+      <button class="pff on" onclick="filterPF('all',this)">الكل</button>
+      <button class="pff" onclick="filterPF('شقة',this)">شقق</button>
+      <button class="pff" onclick="filterPF('فيلا',this)">فيلات</button>
+      <button class="pff" onclick="filterPF('استوديو',this)">استوديوهات</button>
+      <button class="pff" onclick="filterPF('تجاري',this)">تجاري</button>
+    </div>
+    <div class="pgrid" id="pf-grid"></div>
+  </section>
+  <footer><div class="footer-logo" id="footer-logo2">ABOZAID<span>.</span></div><p class="fcopy" id="footer-copy2">© 2025</p></footer>
+</div>
+
+<!-- SERVICES -->
+<div class="page" id="page-services">
+  <div style="height:88px;background:var(--bg)"></div>
+  <section>
+    <div style="text-align:center;margin-bottom:52px;"><div class="sec-eyebrow" style="justify-content:center;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-txt">خدماتنا</span><div class="sec-eyebrow-line"></div></div><h2 class="sec-title">حلول متكاملة</h2></div>
+    <div class="svc-grid" id="svc-grid" style="max-width:1400px;margin:0 auto;"></div>
+  </section>
+  <footer><div class="footer-logo">ABOZAID<span>.</span></div><p class="fcopy" id="footer-copy3">© 2025</p></footer>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <div style="height:88px;background:var(--bg)"></div>
+  <section>
+    <div class="about-grid">
+      <div class="about-img-side">
+        <img id="about-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="">
+        <div class="about-img-ov"></div>
+        <div class="about-exp"><span class="n" id="about-exp-num">+15</span><span class="l">سنة خبرة</span></div>
+      </div>
+      <div class="about-txt-side">
+        <div class="about-ew"><div class="about-ew-line"></div><span class="about-ew-txt">من نحن</span></div>
+        <h2 class="about-name" id="about-name">م. سامح<br>أبوزيد</h2>
+        <p class="about-p" id="about-bio1">مهندس معماري وخبير في التصميم الداخلي.</p>
+        <p class="about-p" id="about-bio2">منذ أكثر من خمسة عشر عاماً يحوّل المساحات الفارغة إلى فضاءات تحكي قصص أصحابها.</p>
+        <p class="about-p" id="about-bio3">تعامل مع كبرى القنوات الفضائية وشركات التطوير العقاري.</p>
+        <div class="about-clients" id="about-clients"></div>
+      </div>
+    </div>
+  </section>
+  <footer><div class="footer-logo">ABOZAID<span>.</span></div><p class="fcopy" id="footer-copy4">© 2025</p></footer>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="page" id="page-testimonials">
+  <div style="height:88px;background:var(--bg)"></div>
+  <section>
+    <div style="text-align:center;margin-bottom:52px;"><div class="sec-eyebrow" style="justify-content:center;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-txt">آراء العملاء</span><div class="sec-eyebrow-line"></div></div><h2 class="sec-title">ماذا يقولون</h2></div>
+    <div class="tgrid" id="tgrid"></div>
+  </section>
+  <footer><div class="footer-logo">ABOZAID<span>.</span></div><p class="fcopy" id="footer-copy5">© 2025</p></footer>
+</div>
+
+<!-- CONTACT -->
+<div class="page" id="page-contact">
+  <div style="height:88px;background:var(--bg)"></div>
+  <section>
+    <div style="text-align:center;margin-bottom:52px;"><div class="sec-eyebrow" style="justify-content:center;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-txt">تواصل</span><div class="sec-eyebrow-line"></div></div><h2 class="sec-title">لنبدأ مشروعك</h2></div>
+    <div class="contact-grid" style="max-width:1200px;margin:0 auto;">
+      <div class="contact-info">
+        <h3 class="ci-title">نحن هنا<br>لخدمتك</h3>
+        <p class="ci-desc">هل لديك مشروع؟ تواصل معنا وسنردّ في أقرب وقت.</p>
+        <div class="ci-list">
+          <div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-lbl">هاتف</div><div class="ci-val" id="info-phone">+20 100 123 4567</div></div></div>
+          <div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-lbl">إيميل</div><div class="ci-val" id="info-email">info@abozaid-design.com</div></div></div>
+          <div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-lbl">العنوان</div><div class="ci-val" id="info-addr">القاهرة — التجمع الخامس</div></div></div>
+        </div>
+        <div class="social-btns" id="social-btns"></div>
+      </div>
+      <div class="cform-side">
+        <div class="cform">
+          <div class="frow">
+            <div class="fg"><label>الاسم *</label><input type="text" id="cn" placeholder="محمد أحمد"><div class="ferr" id="e-cn">الرجاء إدخال الاسم</div></div>
+            <div class="fg"><label>الهاتف *</label><input type="tel" id="cph" placeholder="+20 1XX XXX XXXX"><div class="ferr" id="e-cph">رقم غير صحيح</div></div>
+          </div>
+          <div class="fg"><label>البريد الإلكتروني *</label><input type="email" id="cem" placeholder="your@email.com"><div class="ferr" id="e-cem">بريد غير صحيح</div></div>
+          <div class="fg"><label>نوع المشروع</label><select id="ctp"><option value="">اختر...</option><option>شقة سكنية</option><option>فيلا</option><option>مكتب تجاري</option><option>استوديو / قناة</option><option>استشارة هندسية</option></select></div>
+          <div class="fg"><label>تفاصيل المشروع</label><textarea id="cmsg" placeholder="أخبرنا عن مشروعك..."></textarea></div>
+          <div class="fsuccess" id="fsuc">✅ تم إرسال رسالتك! سنتواصل معك قريباً.</div>
+          <button class="btn-primary" onclick="submitContact()" id="send-btn">إرسال الرسالة</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer><div class="footer-logo">ABOZAID<span>.</span></div><p class="fcopy" id="footer-copy6">© 2025</p></footer>
+</div>
+
+<!-- AUTH -->
+<div class="page" id="page-auth">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <div class="auth-left-img"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=75" alt=""></div>
+      <div class="auth-brand" id="auth-brand">ABOZAID<span>.</span></div>
+      <div class="auth-tagline"><h2 class="auth-tagline-h">انضم إلينا<br>واستعرض أعمالنا</h2><p class="auth-tagline-p">تابع مشاريعك، أرسل طلباتك، واحفظ مشاريعك المفضلة.</p></div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-box">
+        <div class="auth-tabs"><button class="auth-tab on" id="tab-login" onclick="setAuthTab('login')">دخول</button><button class="auth-tab" id="tab-reg" onclick="setAuthTab('reg')">تسجيل</button></div>
+        <div id="form-login">
+          <h2 class="auth-title">أهلاً بك</h2><p class="auth-sub">سجّل دخولك للمتابعة</p>
+          <div class="auth-form" style="display:flex;flex-direction:column;gap:12px;">
+            <div class="fg"><label>رقم الهاتف</label><input type="tel" id="l-phone" placeholder="+20 1XX XXX XXXX"></div>
+            <div class="fg"><label>كلمة المرور</label><input type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+            <div class="auth-err" id="l-err">بيانات الدخول غير صحيحة</div>
+            <button class="btn-primary" onclick="doLogin()" style="width:100%">دخول</button>
+          </div>
+          <div class="auth-switch">ليس لديك حساب؟ <a onclick="setAuthTab('reg')">تسجيل جديد</a></div>
+          <div class="auth-switch" style="margin-top:8px;"><a onclick="goOwnerLogin()" style="color:var(--text3);font-size:.74rem;">⚙ دخول صاحب العمل</a></div>
+        </div>
+        <div id="form-reg" style="display:none">
+          <h2 class="auth-title">إنشاء حساب</h2><p class="auth-sub">انضم وابدأ رحلتك معنا</p>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="fg"><label>الاسم الكامل *</label><input type="text" id="r-name"></div>
+            <div class="fg"><label>رقم الهاتف *</label><input type="tel" id="r-phone" placeholder="+20 1XX XXX XXXX"></div>
+            <div class="fg"><label>البريد الإلكتروني *</label><input type="email" id="r-email" placeholder="your@email.com"></div>
+            <div class="fg"><label>كلمة المرور * (6 أحرف على الأقل)</label><input type="password" id="r-pass"></div>
+            <div class="auth-err" id="r-err"></div>
+            <button class="btn-primary" onclick="doRegister()" style="width:100%">إنشاء الحساب</button>
+          </div>
+          <div class="auth-switch">لديك حساب؟ <a onclick="setAuthTab('login')">تسجيل الدخول</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OWNER LOGIN -->
+<div class="page" id="page-owner-login">
+  <div class="owner-login-wrap auth-wrap">
+    <div class="auth-left" style="background:var(--bg2);">
+      <div class="auth-left-img"><img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800" alt=""></div>
+      <div class="auth-brand">ABOZAID<span>.</span></div>
+      <div class="auth-tagline"><h2 class="auth-tagline-h">لوحة تحكم<br>صاحب العمل</h2><p class="auth-tagline-p">أدر الموقع بالكامل، شاهد الرسائل، عدّل المحتوى.</p></div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-box">
+        <h2 class="auth-title">دخول مميز</h2><p class="auth-sub">خاص بصاحب الموقع فقط</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="fg"><label>اسم المستخدم</label><input type="text" id="o-user" value="admin"></div>
+          <div class="fg"><label>كلمة المرور</label><input type="password" id="o-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doOwnerLogin()"></div>
+          <div class="auth-err" id="o-err">بيانات غير صحيحة</div>
+          <button class="btn-primary" onclick="doOwnerLogin()" style="width:100%">دخول</button>
+          <button class="btn-ghost" onclick="goPage('auth')" style="width:100%">← العودة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- USER DASHBOARD -->
+<div class="page" id="page-user-dash">
+  <div class="dash-top">
+    <div class="dash-top-row">
+      <div><div class="dash-greeting">مرحباً بك</div><div class="dash-name" id="u-name">المستخدم</div><div class="dash-sub" id="u-phone"></div></div>
+      <div style="display:flex;gap:9px;"><button class="btn-ghost" onclick="goPage('home')">← الموقع</button><button class="btn-ghost" onclick="doLogout()">خروج</button></div>
+    </div>
+    <div class="dash-tabs">
+      <button class="dtab-btn on" onclick="uTab('overview',this)">نظرة عامة</button>
+      <button class="dtab-btn" onclick="uTab('requests',this)">طلباتي</button>
+      <button class="dtab-btn" onclick="uTab('saved',this)">محفوظاتي</button>
+      <button class="dtab-btn" onclick="uTab('profile',this)">الملف الشخصي</button>
+    </div>
+  </div>
+  <div class="dash-body">
+    <div class="dtab on" id="ud-overview">
+      <div class="ustats">
+        <div class="ustat"><div class="n" id="u-req-c">0</div><div class="l">طلباتي</div></div>
+        <div class="ustat"><div class="n" id="u-sav-c">0</div><div class="l">محفوظاتي</div></div>
+        <div class="ustat"><div class="n" id="u-rep-c">0</div><div class="l">ردود الفريق</div></div>
+      </div>
+      <h3 class="o-title">آخر طلباتي</h3>
+      <div class="req-list" id="u-req-list"></div>
+      <div style="margin-top:22px;"><button class="btn-primary" onclick="goPage('contact')">➕ طلب جديد</button></div>
+    </div>
+    <div class="dtab" id="ud-requests"><h3 class="o-title">جميع طلباتي</h3><div class="req-list" id="u-all-req"></div></div>
+    <div class="dtab" id="ud-saved"><h3 class="o-title">المشاريع المحفوظة</h3><div class="saved-grid" id="u-saved-grid"></div></div>
+    <div class="dtab" id="ud-profile">
+      <h3 class="o-title">الملف الشخصي</h3>
+      <div style="max-width:440px;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:24px;">
+        <div class="cform">
+          <div class="fg"><label>الاسم</label><input type="text" id="up-name"></div>
+          <div class="fg"><label>الهاتف (لا يمكن تغييره)</label><input type="tel" id="up-phone" readonly style="opacity:.5;"></div>
+          <div class="fg"><label>البريد الإلكتروني</label><input type="email" id="up-email"></div>
+          <div class="fg"><label>كلمة مرور جديدة (اتركها فارغة)</label><input type="password" id="up-pass"></div>
+          <button class="btn-primary" onclick="saveProfile()">حفظ التغييرات</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OWNER PANEL -->
+<div class="page" id="page-owner">
+  <div class="owner-top">
+    <div class="owner-top-row">
+      <div><div class="dash-greeting">م. سامح أبوزيد</div><div class="owner-panel-title">⚙ لوحة التحكم الكاملة</div></div>
+      <div style="display:flex;gap:9px;"><button class="btn-ghost" onclick="goPage('home')">← الموقع</button><button class="btn-ghost" onclick="doLogout()">خروج</button></div>
+    </div>
+    <div class="owner-tabs">
+      <button class="otab-btn on" onclick="oTab('dashboard',this)">لوحة المعلومات</button>
+      <button class="otab-btn" onclick="oTab('messages',this)">الرسائل<span class="obadge" id="unread-badge" style="display:none">0</span></button>
+      <button class="otab-btn" onclick="oTab('content',this)">✏️ محتوى الموقع</button>
+      <button class="otab-btn" onclick="oTab('add-project',this)">إضافة مشروع</button>
+      <button class="otab-btn" onclick="oTab('manage-projects',this)">المشاريع</button>
+      <button class="otab-btn" onclick="oTab('testimonials',this)">الشهادات</button>
+      <button class="otab-btn" onclick="oTab('users',this)">المستخدمون</button>
+      <button class="otab-btn" onclick="oTab('settings',this)">الإعدادات</button>
+    </div>
+  </div>
+  <div class="owner-body">
+    <div class="owner-sidebar">
+      <div class="osi on" onclick="oSide('dashboard',this)"><span>📊</span>لوحة المعلومات</div>
+      <div class="osi" onclick="oSide('messages',this)"><span>✉️</span>الرسائل<span class="osibadge" id="unread-badge2" style="display:none">0</span></div>
+      <div class="osi" onclick="oSide('content',this)"><span>✏️</span>محتوى الموقع</div>
+      <div class="osi" onclick="oSide('add-project',this)"><span>➕</span>إضافة مشروع</div>
+      <div class="osi" onclick="oSide('manage-projects',this)"><span>📁</span>المشاريع</div>
+      <div class="osi" onclick="oSide('testimonials',this)"><span>⭐</span>الشهادات</div>
+      <div class="osi" onclick="oSide('users',this)"><span>👥</span>المستخدمون</div>
+      <div class="osi" onclick="oSide('settings',this)"><span>⚙️</span>الإعدادات</div>
+    </div>
+    <div class="owner-content">
+
+      <!-- DASHBOARD -->
+      <div class="otab on" id="ot-dashboard">
+        <div class="ostats">
+          <div class="ostat"><div class="n" id="os-proj">0</div><div class="l">المشاريع</div></div>
+          <div class="ostat"><div class="n" id="os-msg">0</div><div class="l">الرسائل</div></div>
+          <div class="ostat"><div class="n" id="os-unread">0</div><div class="l">غير مقروءة</div></div>
+          <div class="ostat"><div class="n" id="os-users">0</div><div class="l">المستخدمون</div></div>
+        </div>
+        <h3 class="o-title">آخر الرسائل</h3>
+        <div class="mlist" id="o-dash-msgs"></div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="otab" id="ot-messages">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:9px;">
+          <h3 class="o-title" style="margin-bottom:0;">الرسائل والطلبات</h3>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;">
+            <button class="btn-edit" onclick="filterMsgs('all')" id="mf-all">الكل</button>
+            <button class="btn-edit" onclick="filterMsgs('unread')" id="mf-unread">غير مقروءة</button>
+            <button class="btn-del" onclick="clearAllMsgs()">حذف الكل</button>
+          </div>
+        </div>
+        <div class="mlist" id="o-all-msgs"></div>
+      </div>
+
+      <!-- CONTENT EDITOR -->
+      <div class="otab" id="ot-content">
+        <h3 class="o-title">✏️ تعديل محتوى الموقع</h3>
+        <div class="ocard">
+          <!-- SITE IDENTITY -->
+          <div class="content-section">
+            <div class="content-section-title">🏷️ هوية الموقع</div>
+            <div class="content-grid">
+              <div class="fg"><label>اسم الموقع (يظهر في الشعار)</label><input type="text" id="c-sitename" placeholder="ABOZAID"></div>
+              <div class="fg"><label>مسمى المهندس (يظهر في الشارة)</label><input type="text" id="c-eng-title" placeholder="مصمم داخلي معتمد"></div>
+            </div>
+          </div>
+          <!-- HERO -->
+          <div class="content-section">
+            <div class="content-section-title">🖼️ الصفحة الرئيسية (Hero)</div>
+            <div class="content-grid">
+              <div class="fg"><label>العنوان الكبير</label><input type="text" id="c-hero-h1" placeholder="نصنع"></div>
+              <div class="fg"><label>العنوان المائل (بالذهبي)</label><input type="text" id="c-hero-sub" placeholder="مساحات تحكي قصتك"></div>
+            </div>
+            <div class="content-grid full" style="margin-top:10px;">
+              <div class="fg"><label>النص التعريفي</label><textarea id="c-hero-desc" style="min-height:70px;"></textarea></div>
+            </div>
+            <div class="content-grid full" style="margin-top:10px;">
+              <div class="fg"><label>رابط صورة الخلفية</label><input type="url" id="c-hero-img" placeholder="https://..."></div>
+            </div>
+          </div>
+          <!-- STATS -->
+          <div class="content-section">
+            <div class="content-section-title">📊 الإحصائيات</div>
+            <div class="content-grid three">
+              <div class="fg"><label>رقم 1</label><input type="text" id="c-s1n" placeholder="+200"></div>
+              <div class="fg"><label>نص 1</label><input type="text" id="c-s1l" placeholder="مشروع منجز"></div>
+            </div>
+            <div class="content-grid three" style="margin-top:10px;">
+              <div class="fg"><label>رقم 2</label><input type="text" id="c-s2n" placeholder="15"></div>
+              <div class="fg"><label>نص 2</label><input type="text" id="c-s2l" placeholder="سنة خبرة"></div>
+            </div>
+            <div class="content-grid three" style="margin-top:10px;">
+              <div class="fg"><label>رقم 3</label><input type="text" id="c-s3n" placeholder="+50"></div>
+              <div class="fg"><label>نص 3</label><input type="text" id="c-s3l" placeholder="عميل"></div>
+            </div>
+          </div>
+          <!-- ABOUT -->
+          <div class="content-section">
+            <div class="content-section-title">👤 صفحة "من نحن"</div>
+            <div class="content-grid">
+              <div class="fg"><label>اسم المهندس</label><input type="text" id="c-eng-name" placeholder="م. سامح أبوزيد"></div>
+              <div class="fg"><label>سنوات الخبرة</label><input type="text" id="c-exp" placeholder="+15"></div>
+            </div>
+            <div class="content-grid full" style="margin-top:10px;">
+              <div class="fg"><label>رابط صورة المهندس</label><input type="url" id="c-eng-photo" placeholder="https://..."></div>
+            </div>
+            <div class="content-grid full" style="margin-top:10px;">
+              <div class="fg"><label>الفقرة الأولى</label><textarea id="c-bio1" style="min-height:70px;"></textarea></div>
+            </div>
+            <div class="content-grid full" style="margin-top:10px;">
+              <div class="fg"><label>الفقرة الثانية</label><textarea id="c-bio2" style="min-height:70px;"></textarea></div>
+            </div>
+            <div class="content-grid full" style="margin-top:10px;">
+              <div class="fg"><label>الفقرة الثالثة</label><textarea id="c-bio3" style="min-height:70px;"></textarea></div>
+            </div>
+            <div class="content-grid full" style="margin-top:10px;">
+              <div class="fg"><label>قائمة العملاء (افصل بفاصلة)</label><input type="text" id="c-clients" placeholder="قناة النهار,ON E,طلعت مصطفى"></div>
+            </div>
+          </div>
+          <!-- FOOTER -->
+          <div class="content-section">
+            <div class="content-section-title">📄 الفوتر</div>
+            <div class="content-grid full">
+              <div class="fg"><label>نص حقوق الملكية</label><input type="text" id="c-footer" placeholder="© 2025 م. سامح أبوزيد"></div>
+            </div>
+          </div>
+          <!-- SOCIAL -->
+          <div class="content-section">
+            <div class="content-section-title">📱 وسائل التواصل</div>
+            <div class="content-grid">
+              <div class="fg"><label>واتساب (الرقم مع الكود)</label><input type="text" id="c-wa" placeholder="201001234567"></div>
+              <div class="fg"><label>إنستغرام (رابط)</label><input type="url" id="c-ig" placeholder="https://instagram.com/..."></div>
+            </div>
+            <div class="content-grid" style="margin-top:10px;">
+              <div class="fg"><label>يوتيوب (رابط)</label><input type="url" id="c-yt" placeholder="https://youtube.com/..."></div>
+              <div class="fg"><label>تيك توك (رابط)</label><input type="url" id="c-tt" placeholder="https://tiktok.com/..."></div>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="saveContent()" id="save-content-btn">💾 حفظ جميع التغييرات</button>
+        </div>
+      </div>
+
+      <!-- ADD PROJECT -->
+      <div class="otab" id="ot-add-project">
+        <h3 class="o-title" id="proj-form-title">إضافة مشروع جديد</h3>
+        <div class="ocard">
+          <div class="cform">
+            <div class="frow">
+              <div class="fg"><label>اسم المشروع *</label><input type="text" id="pt"></div>
+              <div class="fg"><label>التصنيف</label><select id="pc"><option value="شقة">شقة</option><option value="فيلا">فيلا</option><option value="استوديو">استوديو</option><option value="تجاري">تجاري</option></select></div>
+            </div>
+            <div class="frow">
+              <div class="fg"><label>الموقع</label><input type="text" id="pl"></div>
+              <div class="fg"><label>المساحة</label><input type="text" id="pa" placeholder="250 م²"></div>
+            </div>
+            <div class="frow">
+              <div class="fg"><label>السنة</label><input type="text" id="py"></div>
+              <div class="fg"><label>العميل</label><input type="text" id="pcl"></div>
+            </div>
+            <div class="fg"><label>الوصف</label><textarea id="pd" style="min-height:80px;"></textarea></div>
+            <div class="fg"><label>رابط الصورة الرئيسية *</label><input type="url" id="pi" placeholder="https://..."></div>
+            <div class="frow">
+              <div class="fg"><label>صورة قبل</label><input type="url" id="pbf"></div>
+              <div class="fg"><label>صورة بعد</label><input type="url" id="paf"></div>
+            </div>
+            <div class="fg"><label>صور إضافية (رابط لكل سطر)</label><textarea id="pg" style="min-height:70px;"></textarea></div>
+            <div class="fg"><label>مميز على الرئيسية؟</label><select id="pfeat"><option value="false">لا</option><option value="true">نعم</option></select></div>
+            <input type="hidden" id="p-edit-id">
+            <div style="display:flex;gap:9px;flex-wrap:wrap;">
+              <button class="btn-primary" onclick="saveProject()" id="save-proj-btn">💾 حفظ المشروع</button>
+              <button class="btn-ghost" onclick="clearProjForm()">مسح</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANAGE PROJECTS -->
+      <div class="otab" id="ot-manage-projects">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 class="o-title" style="margin-bottom:0;">إدارة المشاريع</h3>
+          <button class="btn-primary" style="padding:7px 16px;font-size:.76rem;" onclick="oTab('add-project',null);clearProjForm()">➕ مشروع جديد</button>
+        </div>
+        <div id="o-proj-list"></div>
+      </div>
+
+      <!-- TESTIMONIALS -->
+      <div class="otab" id="ot-testimonials">
+        <h3 class="o-title">الشهادات</h3>
+        <div class="ocard">
+          <div class="cform">
+            <div class="frow">
+              <div class="fg"><label>اسم العميل *</label><input type="text" id="tn"></div>
+              <div class="fg"><label>المسمى</label><input type="text" id="tr"></div>
+            </div>
+            <div class="fg"><label>التقييم</label><select id="ts"><option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option><option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option><option value="⭐⭐⭐">⭐⭐⭐</option></select></div>
+            <div class="fg"><label>نص الشهادة *</label><textarea id="tt" style="min-height:80px;"></textarea></div>
+            <button class="btn-primary" style="width:fit-content;" onclick="addTesti()">💾 حفظ</button>
+          </div>
+        </div>
+        <div style="margin-top:18px;" id="o-testi-list"></div>
+      </div>
+
+      <!-- USERS -->
+      <div class="otab" id="ot-users">
+        <h3 class="o-title">المستخدمون المسجلون</h3>
+        <div id="o-users-list"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="otab" id="ot-settings">
+        <h3 class="o-title">إعدادات التواصل وكلمة المرور</h3>
+        <div class="ocard">
+          <div class="cform">
+            <div class="frow">
+              <div class="fg"><label>رقم الهاتف</label><input type="text" id="sph"></div>
+              <div class="fg"><label>البريد الإلكتروني</label><input type="email" id="sem"></div>
+            </div>
+            <div class="fg"><label>العنوان</label><input type="text" id="sadr"></div>
+            <div class="fg"><label>كلمة مرور جديدة لصاحب العمل (اتركها فارغة)</label><input type="password" id="spw"></div>
+            <button class="btn-primary" style="width:fit-content;" onclick="saveSettings()">💾 حفظ</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mov" id="projModal" onclick="closeMOV(event)">
+  <div class="mbox">
+    <div class="mhero" id="mhero">
+      <img id="mimg" src="" alt="">
+      <div id="mba" style="display:none;position:absolute;inset:0;"></div>
+      <button class="mclose" onclick="closeModal()">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="mcat" id="mcat"></div>
+      <h2 class="mtitle" id="mtitle"></h2>
+      <div class="mmeta" id="mmeta"></div>
+      <p class="mdesc" id="mdesc"></p>
+      <div class="msave-row" id="msave-row" style="display:none;margin-bottom:16px;"></div>
+      <div class="mgallery" id="mgallery"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ SUPABASE ══
+const SURL='https://morwiizwrxtkmdxwcyqa.supabase.co';
+const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vcndpaXp3cnh0a21keHdjeXFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTI1NzUsImV4cCI6MjA5NTgyODU3NX0.3_em93VVqHmftfcTIo4kAnn_jlDDwmFGzMpaGAwRFjY';
+const sb=supabase.createClient(SURL,SKEY);
+
+// ══ STATE ══
+let currentUser=null,projects=[],testimonials=[],messages=[],users=[];
+let ownerPass='admin123',siteSettings={},currentMsgFilter='all';
+
+// ══ LOADER ══
+let loadProgress=0;
+function setLoad(n){loadProgress=n;const f=document.getElementById('loader-fill');if(f)f.style.width=n+'%';}
+
+// ══ INIT ══
+async function init(){
+  setLoad(10);
+  try{
+    setLoad(30);await loadSettings();
+    setLoad(55);await loadProjects();
+    setLoad(75);await loadTestimonials();
+    setLoad(90);
+    const sess=localStorage.getItem('abozaid_v2');
+    if(sess){try{currentUser=JSON.parse(sess);renderNavUser();}catch{}}
+    setLoad(100);
+  }catch(e){console.error(e);setLoad(100);}
+  setTimeout(()=>{document.getElementById('loader').classList.add('hide');renderHomeGrid();},400);
+}
+
+// ══ DATA ══
+async function loadProjects(){const{data}=await sb.from('projects').select('*').order('created_at',{ascending:false});if(data)projects=data;}
+async function loadTestimonials(){const{data}=await sb.from('testimonials').select('*').order('created_at',{ascending:false});if(data)testimonials=data;}
+async function loadMessages(){const{data}=await sb.from('messages').select('*').order('created_at',{ascending:false});if(data)messages=data;}
+async function loadUsers(){const{data}=await sb.from('users').select('*').order('created_at',{ascending:false});if(data)users=data;}
+async function loadSettings(){
+  const{data}=await sb.from('site_settings').select('*').eq('id',1).single();
+  if(data){siteSettings=data;ownerPass=data.owner_password||'admin123';applyAllContent(data);}
+}
+
+// ══ APPLY CONTENT ══
+function applyAllContent(d){
+  if(!d)return;
+  // Nav & Logo
+  const siteName=d.site_name||'ABOZAID';
+  ['nav-logo','footer-logo','footer-logo2','auth-brand'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.innerHTML=siteName+'<span>.</span>';
+  });
+  // Hero
+  if(d.hero_title)setText('hero-h1',d.hero_title);
+  if(d.hero_subtitle)setText('hero-subtitle',d.hero_subtitle);
+  if(d.hero_desc)setText('hero-desc',d.hero_desc);
+  if(d.engineer_title)setText('hero-badge-txt',d.engineer_title);
+  if(d.hero_image){const img=document.getElementById('hero-bg-img');if(img)img.src=d.hero_image;}
+  // Stats
+  if(d.stat1_num)setText('stat1-num',d.stat1_num);if(d.stat1_label)setText('stat1-lbl',d.stat1_label);
+  if(d.stat2_num)setText('stat2-num',d.stat2_num);if(d.stat2_label)setText('stat2-lbl',d.stat2_label);
+  if(d.stat3_num)setText('stat3-num',d.stat3_num);if(d.stat3_label)setText('stat3-lbl',d.stat3_label);
+  // About
+  if(d.engineer_name)setText('about-name',d.engineer_name);
+  if(d.years_exp)setText('about-exp-num',d.years_exp);
+  if(d.engineer_bio1)setText('about-bio1',d.engineer_bio1);
+  if(d.engineer_bio2)setText('about-bio2',d.engineer_bio2);
+  if(d.engineer_bio3)setText('about-bio3',d.engineer_bio3);
+  if(d.engineer_photo){const img=document.getElementById('about-photo');if(img)img.src=d.engineer_photo;}
+  if(d.clients_list){
+    const el=document.getElementById('about-clients');
+    if(el)el.innerHTML=d.clients_list.split(',').map(c=>`<div class="aclient">${c.trim()}</div>`).join('');
+  }
+  // Contact
+  if(d.phone)setText('info-phone',d.phone);if(d.email)setText('info-email',d.email);if(d.address)setText('info-addr',d.address);
+  // Social
+  const sb2=document.getElementById('social-btns');
+  if(sb2){
+    let s='';
+    if(d.whatsapp)s+=`<a class="soc-btn" href="https://wa.me/${d.whatsapp}" target="_blank">💬</a>`;
+    if(d.instagram)s+=`<a class="soc-btn" href="${d.instagram}" target="_blank">📸</a>`;
+    if(d.youtube)s+=`<a class="soc-btn" href="${d.youtube}" target="_blank">▶️</a>`;
+    if(d.tiktok)s+=`<a class="soc-btn" href="${d.tiktok}" target="_blank">🎵</a>`;
+    sb2.innerHTML=s;
+  }
+  // Footer
+  ['footer-copy','footer-copy2','footer-copy3','footer-copy4','footer-copy5','footer-copy6'].forEach(id=>{
+    if(d.footer_copy){const el=document.getElementById(id);if(el)el.textContent=d.footer_copy;}
+  });
+}
+function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+
+// ══ NAV ══
+function goPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.dataset.pg===p));
+  document.getElementById('mainNav').style.display='flex';
+  window.scrollTo(0,0);
+  if(p==='home')renderHomeGrid();
+  if(p==='portfolio')renderPFGrid('all');
+  if(p==='testimonials')renderTestimonials();
+}
+function goOwnerLogin(){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('page-owner-login').classList.add('active');document.getElementById('mainNav').style.display='none';window.scrollTo(0,0);}
+function toggleMob(){document.getElementById('mobMenu').classList.toggle('open');}
+function closeMob(){document.getElementById('mobMenu').classList.remove('open');}
+window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('solid',window.scrollY>50));
+function renderNavUser(){
+  const nr=document.getElementById('navRight');
+  if(currentUser){nr.innerHTML=`<div class="user-chip" onclick="${currentUser.role==='owner'?'goPage(\'owner\')':'goPage(\'user-dash\')'};"><div class="user-av">${(currentUser.name||'?').charAt(0)}</div><span class="user-chip-name">${currentUser.name||''}</span></div>`;}
+  else{nr.innerHTML=`<button class="btn-ghost" onclick="goPage('auth')">دخول</button><button class="btn-accent" onclick="goPage('auth');setAuthTab('reg')">تسجيل</button>`;}
+}
+
+// ══ AUTH ══
+function setAuthTab(t){
+  document.getElementById('tab-login').classList.toggle('on',t==='login');
+  document.getElementById('tab-reg').classList.toggle('on',t==='reg');
+  document.getElementById('form-login').style.display=t==='login'?'block':'none';
+  document.getElementById('form-reg').style.display=t==='reg'?'block':'none';
+}
+function hashPass(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return h.toString(36);}
+async function doLogin(){
+  const phone=document.getElementById('l-phone').value.trim();
+  const pass=document.getElementById('l-pass').value;
+  const{data}=await sb.from('users').select('*').eq('phone',phone).eq('password_hash',hashPass(pass)).single();
+  if(!data){document.getElementById('l-err').style.display='block';return;}
+  document.getElementById('l-err').style.display='none';
+  currentUser={...data,role:'user'};
+  localStorage.setItem('abozaid_v2',JSON.stringify(currentUser));
+  renderNavUser();await loadUserDash();goPage('user-dash');showToast('✅ مرحباً '+data.name);
+}
+async function doRegister(){
+  const name=document.getElementById('r-name').value.trim();
+  const phone=document.getElementById('r-phone').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  const pass=document.getElementById('r-pass').value;
+  const e=document.getElementById('r-err');
+  if(!name){e.textContent='الرجاء إدخال الاسم';e.style.display='block';return;}
+  if(!/^[\d\s\+\-]{8,}$/.test(phone)){e.textContent='رقم هاتف غير صحيح';e.style.display='block';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){e.textContent='بريد إلكتروني غير صحيح';e.style.display='block';return;}
+  if(pass.length<6){e.textContent='كلمة المرور قصيرة جداً';e.style.display='block';return;}
+  e.style.display='none';
+  const{error}=await sb.from('users').insert({name,phone,email,password_hash:hashPass(pass),role:'user',saved_projects:[]});
+  if(error){e.textContent=error.code==='23505'?'رقم الهاتف أو البريد مسجّل مسبقاً':'خطأ في التسجيل';e.style.display='block';return;}
+  const{data}=await sb.from('users').select('*').eq('phone',phone).single();
+  currentUser={...data,role:'user'};
+  localStorage.setItem('abozaid_v2',JSON.stringify(currentUser));
+  renderNavUser();await loadUserDash();goPage('user-dash');showToast('🎉 تم إنشاء حسابك!');
+}
+function doOwnerLogin(){
+  const u=document.getElementById('o-user').value,p=document.getElementById('o-pass').value;
+  if(u==='admin'&&p===ownerPass){
+    document.getElementById('o-err').style.display='none';
+    currentUser={name:'م. سامح أبوزيد',role:'owner'};
+    localStorage.setItem('abozaid_v2',JSON.stringify(currentUser));
+    renderNavUser();document.getElementById('mainNav').style.display='flex';
+    loadOwnerDash();goPage('owner');showToast('✅ مرحباً م. سامح');
+  }else{document.getElementById('o-err').style.display='block';}
+}
+function doLogout(){currentUser=null;localStorage.removeItem('abozaid_v2');renderNavUser();goPage('home');showToast('تم تسجيل الخروج');}
+
+// ══ PORTFOLIO ══
+const cardCls=['c1','c2','c3','c4','c5','c6','c7'];
+function cardHtml(p,i){
+  const ba=p.before_url&&p.after_url;
+  const cls=cardCls[i%cardCls.length];
+  return `<div class="pcard ${cls}" onclick="openModal(${p.id})">
+    <img src="${p.image_url}" alt="${p.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=800'">
+    ${ba?'<div class="ba-badge">قبل/بعد ✨</div>':''}
+    <div class="pcard-base"><div class="pcard-cat">${p.category}</div><div class="pcard-name">${p.title}</div></div>
+    <div class="pcard-over"><div class="pcard-cat">${p.category}${p.year?' · '+p.year:''}</div><div class="pcard-name">${p.title}</div><div class="pcard-loc">${p.location||''}</div><div class="pcard-cta">عرض التفاصيل →</div></div>
+  </div>`;
+}
+function renderHomeGrid(){const el=document.getElementById('home-grid');if(!el)return;const s=[...projects.filter(x=>x.featured),...projects.filter(x=>!x.featured)].slice(0,7);el.innerHTML=s.map((p,i)=>cardHtml(p,i)).join('');}
+function renderPFGrid(f){const l=f==='all'?projects:projects.filter(p=>p.category===f);document.getElementById('pf-grid').innerHTML=l.map((p,i)=>cardHtml(p,i)).join('');}
+function filterPF(f,btn){document.querySelectorAll('.pff').forEach(t=>t.classList.remove('on'));btn.classList.add('on');renderPFGrid(f);}
+function renderTestimonials(){const el=document.getElementById('tgrid');if(!el)return;el.innerHTML=testimonials.map(t=>`<div class="tcard"><div class="tcard-q">"</div><div class="tcard-stars">${t.stars}</div><p class="tcard-txt">${t.content}</p><div class="tcard-author"><div class="tcard-av">${(t.name||'?').charAt(0)}</div><div><div class="tcard-name">${t.name}</div><div class="tcard-role">${t.role||''}</div></div></div></div>`).join('');}
+
+// ══ SERVICES ══
+const defaultSvcs=[
+  {icon:'🏠',num:'01',title:'التصميم الداخلي',desc:'نصمم كل تفصيل داخلي من الألوان والمواد حتى الأثاث والإضاءة.'},
+  {icon:'🔨',num:'02',title:'الإشراف على التنفيذ',desc:'إشراف كامل على مراحل التنفيذ لضمان الجودة والمواعيد.'},
+  {icon:'📺',num:'03',title:'ديكور الاستوديوهات',desc:'تصميم متخصص لاستوديوهات التلفزيون والبودكاست.'},
+  {icon:'💼',num:'04',title:'الاستشارات الهندسية',desc:'استشارات متخصصة ودراسات جدوى للمشاريع المختلفة.'},
+  {icon:'🏢',num:'05',title:'التصميم التجاري',desc:'تصميم المكاتب والمحلات والمطاعم والفنادق.'},
+  {icon:'🎨',num:'06',title:'التأثيث والديكور',desc:'اختيار وتوريد الأثاث والديكور مع تنسيق كامل للفضاء.'},
+];
+function renderSvcGrids(){
+  const html=defaultSvcs.map(s=>`<div class="svc"><div class="svc-n">${s.num}</div><span class="svc-icon">${s.icon}</span><h3 class="svc-title">${s.title}</h3><p class="svc-desc">${s.desc}</p></div>`).join('');
+  ['home-svc-grid','svc-grid'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+}
+
+// ══ MODAL ══
+function openModal(id){
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  const hasBa=p.before_url&&p.after_url;
+  document.getElementById('mimg').src=p.image_url;
+  document.getElementById('mimg').style.display=hasBa?'none':'block';
+  const ba=document.getElementById('mba');
+  if(hasBa){ba.style.display='block';ba.innerHTML=`<div class="bawrap" id="baw"><div class="baafter"><img src="${p.after_url}" onerror="this.src='${p.image_url}'"></div><div class="babefore" id="bbc"><img src="${p.before_url}" onerror="this.src='${p.image_url}'"></div><div class="bahandle" id="bah"><div class="bacircle">↔</div></div><div class="balbl b">قبل</div><div class="balbl a">بعد</div></div>`;initBA();}
+  else{ba.style.display='none';}
+  document.getElementById('mcat').textContent=p.category;
+  document.getElementById('mtitle').textContent=p.title;
+  document.getElementById('mdesc').textContent=p.description||'';
+  let meta='';
+  if(p.location)meta+=`<div class="mmeta-i"><label>الموقع</label><span>${p.location}</span></div>`;
+  if(p.area)meta+=`<div class="mmeta-i"><label>المساحة</label><span>${p.area}</span></div>`;
+  if(p.year)meta+=`<div class="mmeta-i"><label>السنة</label><span>${p.year}</span></div>`;
+  if(p.client)meta+=`<div class="mmeta-i"><label>العميل</label><span>${p.client}</span></div>`;
+  document.getElementById('mmeta').innerHTML=meta;
+  document.getElementById('mgallery').innerHTML=(p.gallery_urls||[]).map(g=>`<img src="${g}" loading="lazy">`).join('');
+  const sr=document.getElementById('msave-row');
+  if(currentUser&&currentUser.role==='user'){const saved=(currentUser.saved_projects||[]).includes(id);sr.style.display='block';sr.innerHTML=`<button class="btn-${saved?'del':'primary'}" style="padding:7px 18px;font-size:.78rem;" onclick="toggleSave(${id})">${saved?'✕ إزالة':'♡ حفظ المشروع'}</button>`;}
+  else{sr.style.display='none';}
+  document.getElementById('projModal').classList.add('open');document.body.style.overflow='hidden';
+}
+async function toggleSave(id){
+  if(!currentUser||currentUser.role==='owner')return;
+  const saved=currentUser.saved_projects||[];const idx=saved.indexOf(id);let ns;
+  if(idx>-1){ns=[...saved];ns.splice(idx,1);showToast('تم الإزالة');}else{ns=[...saved,id];showToast('✅ تم الحفظ');}
+  await sb.from('users').update({saved_projects:ns}).eq('phone',currentUser.phone);
+  currentUser.saved_projects=ns;localStorage.setItem('abozaid_v2',JSON.stringify(currentUser));openModal(id);
+}
+function closeModal(){document.getElementById('projModal').classList.remove('open');document.body.style.overflow='';}
+function closeMOV(e){if(e.target===document.getElementById('projModal'))closeModal();}
+function initBA(){
+  const wrap=document.getElementById('baw'),h=document.getElementById('bah'),bc=document.getElementById('bbc');
+  if(!wrap)return;let d=false;
+  function sp(x){const r=wrap.getBoundingClientRect();let pct=Math.min(Math.max((x-r.left)/r.width,0),1)*100;bc.style.clipPath=`inset(0 ${100-pct}% 0 0)`;h.style.left=pct+'%';}
+  wrap.addEventListener('mousedown',e=>{d=true;sp(e.clientX);});
+  wrap.addEventListener('touchstart',e=>{d=true;sp(e.touches[0].clientX);},{passive:true});
+  document.addEventListener('mousemove',e=>{if(d)sp(e.clientX);});
+  document.addEventListener('touchmove',e=>{if(d)sp(e.touches[0].clientX);},{passive:true});
+  document.addEventListener('mouseup',()=>d=false);document.addEventListener('touchend',()=>d=false);
+}
+
+// ══ CONTACT ══
+async function submitContact(){
+  const name=document.getElementById('cn').value.trim(),phone=document.getElementById('cph').value.trim(),email=document.getElementById('cem').value.trim();
+  const type=document.getElementById('ctp').value,msg=document.getElementById('cmsg').value.trim();
+  let ok=true;
+  document.getElementById('e-cn').style.display=!name?'block':'none';if(!name)ok=false;
+  document.getElementById('e-cph').style.display=!/^[\d\s\+\-]{8,}$/.test(phone)?'block':'none';if(!/^[\d\s\+\-]{8,}$/.test(phone))ok=false;
+  document.getElementById('e-cem').style.display=!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)?'block':'none';if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))ok=false;
+  if(!ok)return;
+  const btn=document.getElementById('send-btn');btn.innerHTML='<span class="spinner"></span>إرسال...';btn.disabled=true;
+  const userId=currentUser&&currentUser.role==='user'?currentUser.id:null;
+  const{error}=await sb.from('messages').insert({name,phone,email,project_type:type,message:msg,user_id:userId});
+  btn.innerHTML='إرسال الرسالة';btn.disabled=false;
+  if(error){showToast('❌ خطأ، حاول مرة أخرى');return;}
+  document.getElementById('fsuc').style.display='block';
+  ['cn','cph','cem','cmsg'].forEach(i=>document.getElementById(i).value='');document.getElementById('ctp').value='';
+  setTimeout(()=>document.getElementById('fsuc').style.display='none',6000);
+  showToast('✅ تم إرسال رسالتك!');
+}
+
+// ══ USER DASH ══
+async function loadUserDash(){
+  if(!currentUser)return;
+  setText('u-name',currentUser.name||'');setText('u-sub',currentUser.phone||'');
+  document.getElementById('u-phone').textContent=currentUser.phone||'';
+  document.getElementById('up-name').value=currentUser.name||'';
+  document.getElementById('up-phone').value=currentUser.phone||'';
+  document.getElementById('up-email').value=currentUser.email||'';
+  const{data:myMsgs}=await sb.from('messages').select('*').eq('phone',currentUser.phone).order('created_at',{ascending:false});
+  const msgs=myMsgs||[];const saved=currentUser.saved_projects||[];
+  document.getElementById('u-req-c').textContent=msgs.length;
+  document.getElementById('u-sav-c').textContent=saved.length;
+  document.getElementById('u-rep-c').textContent=msgs.filter(m=>m.is_read).length;
+  document.getElementById('u-req-list').innerHTML=msgs.slice(0,3).map(m=>`<div class="req-item"><div class="req-info"><div class="req-title">${m.project_type||'استفسار'}</div><div class="req-meta">${new Date(m.created_at).toLocaleDateString('ar-EG')}</div></div><span class="req-status ${m.is_read?'st-read':'st-new'}">${m.is_read?'✓':'جديد'}</span></div>`).join('')||'<div class="empty-st"><span class="ei">📭</span>لا توجد طلبات بعد</div>';
+  document.getElementById('u-all-req').innerHTML=msgs.map(m=>`<div class="req-item"><div class="req-info"><div class="req-title">${m.project_type||'استفسار'}</div><div class="req-meta">${m.message?m.message.slice(0,50)+'...':''}</div></div><span class="req-status ${m.is_read?'st-read':'st-new'}">${m.is_read?'✓':'جديد'}</span></div>`).join('')||'<div class="empty-st"><span class="ei">📭</span>لا توجد طلبات</div>';
+  const savedProj=projects.filter(p=>saved.includes(p.id));
+  document.getElementById('u-saved-grid').innerHTML=savedProj.map(p=>`<div class="saved-card" onclick="openModal(${p.id})"><img src="${p.image_url}" alt="${p.title}"><div class="saved-card-info"><div class="saved-card-cat">${p.category}</div><div class="saved-card-title">${p.title}</div></div></div>`).join('')||'<p style="color:var(--text3);font-size:.86rem;">لم تحفظ مشاريع بعد. <a onclick="goPage(\'portfolio\')" style="color:var(--accent);cursor:pointer;">استعرض المشاريع</a></p>';
+}
+function uTab(n,btn){document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.dtab-btn').forEach(b=>b.classList.remove('on'));document.getElementById('ud-'+n).classList.add('on');btn.classList.add('on');if(n==='saved'||n==='requests')loadUserDash();}
+async function saveProfile(){
+  if(!currentUser)return;
+  const name=document.getElementById('up-name').value.trim(),email=document.getElementById('up-email').value.trim(),pass=document.getElementById('up-pass').value;
+  const upd={};if(name)upd.name=name;if(email)upd.email=email;if(pass&&pass.length>=6)upd.password_hash=hashPass(pass);
+  await sb.from('users').update(upd).eq('phone',currentUser.phone);
+  if(name){currentUser.name=name;setText('u-name',name);}if(email)currentUser.email=email;
+  localStorage.setItem('abozaid_v2',JSON.stringify(currentUser));renderNavUser();document.getElementById('up-pass').value='';
+  showToast('✅ تم حفظ التغييرات');
+}
+
+// ══ OWNER DASH ══
+async function loadOwnerDash(){
+  await Promise.all([loadMessages(),loadUsers(),loadProjects()]);
+  const unread=messages.filter(m=>!m.is_read).length;
+  document.getElementById('os-proj').textContent=projects.length;
+  document.getElementById('os-msg').textContent=messages.length;
+  document.getElementById('os-unread').textContent=unread;
+  document.getElementById('os-users').textContent=users.length;
+  document.getElementById('o-dash-msgs').innerHTML=messages.slice(0,3).map(msgHtml).join('')||'<div class="empty-st"><span class="ei">📭</span>لا توجد رسائل</div>';
+  updateUnreadBadge();
+  // Load settings into content editor
+  const d=siteSettings;
+  if(d){
+    setVal('c-sitename',d.site_name);setVal('c-eng-title',d.engineer_title);
+    setVal('c-hero-h1',d.hero_title);setVal('c-hero-sub',d.hero_subtitle);
+    setVal('c-hero-desc',d.hero_desc);setVal('c-hero-img',d.hero_image);
+    setVal('c-s1n',d.stat1_num);setVal('c-s1l',d.stat1_label);
+    setVal('c-s2n',d.stat2_num);setVal('c-s2l',d.stat2_label);
+    setVal('c-s3n',d.stat3_num);setVal('c-s3l',d.stat3_label);
+    setVal('c-eng-name',d.engineer_name);setVal('c-exp',d.years_exp);
+    setVal('c-eng-photo',d.engineer_photo);
+    setVal('c-bio1',d.engineer_bio1);setVal('c-bio2',d.engineer_bio2);setVal('c-bio3',d.engineer_bio3);
+    setVal('c-clients',d.clients_list);setVal('c-footer',d.footer_copy);
+    setVal('c-wa',d.whatsapp);setVal('c-ig',d.instagram);setVal('c-yt',d.youtube);setVal('c-tt',d.tiktok);
+    setVal('sph',d.phone);setVal('sem',d.email);setVal('sadr',d.address);
+  }
+}
+function setVal(id,val){const el=document.getElementById(id);if(el&&val!=null)el.value=val;}
+function oTab(n,el){
+  document.querySelectorAll('.otab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.otab-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('ot-'+n).classList.add('on');
+  if(el)el.classList.add('on');
+  if(n==='dashboard')loadOwnerDash();
+  if(n==='messages')renderAllMsgs(currentMsgFilter);
+  if(n==='manage-projects')renderProjList();
+  if(n==='testimonials')renderOwnerTesti();
+  if(n==='users')renderUsersList();
+}
+function oSide(n,el){document.querySelectorAll('.osi').forEach(s=>s.classList.remove('on'));el.classList.add('on');oTab(n,null);}
+function updateUnreadBadge(){
+  const n=messages.filter(m=>!m.is_read).length;
+  ['unread-badge','unread-badge2'].forEach(id=>{const b=document.getElementById(id);if(b){b.textContent=n;b.style.display=n>0?'inline-block':'none';}});
+}
+
+// ══ CONTENT SAVE ══
+async function saveContent(){
+  const btn=document.getElementById('save-content-btn');
+  btn.innerHTML='<span class="spinner"></span>جاري الحفظ...';btn.disabled=true;
+  const upd={
+    site_name:getVal('c-sitename'),engineer_title:getVal('c-eng-title'),
+    hero_title:getVal('c-hero-h1'),hero_subtitle:getVal('c-hero-sub'),
+    hero_desc:getVal('c-hero-desc'),hero_image:getVal('c-hero-img'),
+    stat1_num:getVal('c-s1n'),stat1_label:getVal('c-s1l'),
+    stat2_num:getVal('c-s2n'),stat2_label:getVal('c-s2l'),
+    stat3_num:getVal('c-s3n'),stat3_label:getVal('c-s3l'),
+    engineer_name:getVal('c-eng-name'),years_exp:getVal('c-exp'),
+    engineer_photo:getVal('c-eng-photo'),
+    engineer_bio1:getVal('c-bio1'),engineer_bio2:getVal('c-bio2'),engineer_bio3:getVal('c-bio3'),
+    clients_list:getVal('c-clients'),footer_copy:getVal('c-footer'),
+    whatsapp:getVal('c-wa'),instagram:getVal('c-ig'),youtube:getVal('c-yt'),tiktok:getVal('c-tt'),
+  };
+  const{error}=await sb.from('site_settings').update(upd).eq('id',1);
+  btn.innerHTML='💾 حفظ جميع التغييرات';btn.disabled=false;
+  if(error){showToast('❌ خطأ في الحفظ: '+error.message);return;}
+  await loadSettings();
+  renderSvcGrids();
+  showToast('✅ تم حفظ كل التغييرات وتطبيقها فوراً!');
+}
+function getVal(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+
+// ══ MESSAGES ══
+function msgHtml(m){
+  const wa=`https://wa.me/${(m.phone||'').replace(/\D/g,'')}`;
+  const dt=m.created_at?new Date(m.created_at).toLocaleString('ar-EG'):'';
+  return `<div class="mitem${m.is_read?'':' unread'}" id="mi-${m.id}">
+    <div class="mhead">
+      <div class="msender"><div class="mav">${(m.name||'?').charAt(0)}</div>
+      <div><div class="mname">${m.name||''}${!m.is_read?'<span class="udot"></span>':''}</div>
+      <div class="mcontact"><a href="tel:${m.phone}">${m.phone||''}</a>${m.email?' · <a href="mailto:'+m.email+'">'+m.email+'</a>':''}</div></div></div>
+      <div style="text-align:left;"><div class="mdate">${dt}</div>${m.project_type?`<div class="mtype-badge">${m.project_type}</div>`:''}</div>
+    </div>
+    ${m.message?`<div class="mbody">${m.message}</div>`:''}
+    <div class="mfoot">
+      ${!m.is_read?`<button class="mbtn mbtn-read" onclick="markRead(${m.id})">✓ مقروء</button>`:'<span style="color:var(--green);font-size:.72rem;">✓ مقروء</span>'}
+      ${m.phone?`<a class="mbtn mbtn-wa" href="${wa}" target="_blank">💬 واتساب</a><a class="mbtn mbtn-call" href="tel:${m.phone}">📞 اتصال</a>`:''}
+      ${m.email?`<a class="mbtn mbtn-call" href="mailto:${m.email}">✉️ إيميل</a>`:''}
+      <button class="mbtn mbtn-del" onclick="deleteMsg(${m.id})">🗑</button>
+    </div>
+  </div>`;
+}
+async function renderAllMsgs(f){await loadMessages();currentMsgFilter=f;const l=f==='unread'?messages.filter(m=>!m.is_read):messages;document.getElementById('o-all-msgs').innerHTML=l.length?l.map(msgHtml).join(''):'<div class="empty-st"><span class="ei">📭</span>لا توجد رسائل</div>';}
+function filterMsgs(f){renderAllMsgs(f);}
+async function markRead(id){await sb.from('messages').update({is_read:true}).eq('id',id);await loadMessages();updateUnreadBadge();renderAllMsgs(currentMsgFilter);loadOwnerDash();}
+async function deleteMsg(id){if(!confirm('حذف هذه الرسالة؟'))return;await sb.from('messages').delete().eq('id',id);await loadMessages();updateUnreadBadge();renderAllMsgs(currentMsgFilter);loadOwnerDash();showToast('🗑 تم الحذف');}
+async function clearAllMsgs(){if(!confirm('حذف جميع الرسائل؟'))return;await sb.from('messages').delete().neq('id',0);await loadMessages();updateUnreadBadge();renderAllMsgs(currentMsgFilter);loadOwnerDash();}
+
+// ══ PROJECTS CRUD ══
+async function saveProject(){
+  const title=document.getElementById('pt').value.trim(),img=document.getElementById('pi').value.trim();
+  if(!title){showToast('⚠️ الرجاء إدخال اسم المشروع');return;}
+  if(!img){showToast('⚠️ الرجاء إدخال رابط الصورة');return;}
+  const editId=parseInt(document.getElementById('p-edit-id').value)||0;
+  const gallery=document.getElementById('pg').value.trim().split('\n').filter(x=>x.trim());
+  const data={title,category:document.getElementById('pc').value,location:document.getElementById('pl').value.trim(),area:document.getElementById('pa').value.trim(),year:document.getElementById('py').value.trim(),client:document.getElementById('pcl').value.trim(),description:document.getElementById('pd').value.trim(),image_url:img,before_url:document.getElementById('pbf').value.trim()||null,after_url:document.getElementById('paf').value.trim()||null,gallery_urls:gallery,featured:document.getElementById('pfeat').value==='true'};
+  const btn=document.getElementById('save-proj-btn');btn.innerHTML='<span class="spinner"></span>جاري الحفظ...';btn.disabled=true;
+  if(editId){await sb.from('projects').update(data).eq('id',editId);showToast('✅ تم تحديث المشروع');}
+  else{await sb.from('projects').insert(data);showToast('✅ تم إضافة المشروع');}
+  btn.innerHTML='💾 حفظ المشروع';btn.disabled=false;
+  await loadProjects();clearProjForm();renderProjList();renderHomeGrid();
+}
+function clearProjForm(){['pt','pl','pa','py','pcl','pd','pi','pbf','paf','pg'].forEach(i=>document.getElementById(i).value='');document.getElementById('p-edit-id').value='';document.getElementById('pfeat').value='false';document.getElementById('proj-form-title').textContent='إضافة مشروع جديد';}
+function renderProjList(){document.getElementById('o-proj-list').innerHTML=projects.map(p=>`<div class="pli"><img class="pli-thumb" src="${p.image_url}" onerror="this.src='https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=200'"><div class="pli-info"><div class="pli-title">${p.title}</div><div class="pli-cat">${p.category}${p.year?' · '+p.year:''}${p.location?' · '+p.location:''}</div></div><div class="pli-actions"><button class="btn-edit" onclick="editProj(${p.id})">✏️</button><button class="btn-del" onclick="delProj(${p.id})">🗑</button></div></div>`).join('');}
+function editProj(id){
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  oTab('add-project',null);
+  document.getElementById('pt').value=p.title;document.getElementById('pc').value=p.category;
+  document.getElementById('pl').value=p.location||'';document.getElementById('pa').value=p.area||'';
+  document.getElementById('py').value=p.year||'';document.getElementById('pcl').value=p.client||'';
+  document.getElementById('pd').value=p.description||'';document.getElementById('pi').value=p.image_url||'';
+  document.getElementById('pbf').value=p.before_url||'';document.getElementById('paf').value=p.after_url||'';
+  document.getElementById('pg').value=(p.gallery_urls||[]).join('\n');
+  document.getElementById('pfeat').value=p.featured?'true':'false';
+  document.getElementById('p-edit-id').value=id;
+  document.getElementById('proj-form-title').textContent='تعديل: '+p.title;
+  showToast('📝 عدّل البيانات واضغط حفظ');
+}
+async function delProj(id){if(!confirm('حذف هذا المشروع؟'))return;await sb.from('projects').delete().eq('id',id);await loadProjects();renderProjList();renderHomeGrid();loadOwnerDash();showToast('🗑 تم الحذف');}
+
+// ══ TESTIMONIALS ══
+async function addTesti(){
+  const name=document.getElementById('tn').value.trim(),content=document.getElementById('tt').value.trim();
+  if(!name||!content){showToast('⚠️ الرجاء ملء الحقول المطلوبة');return;}
+  await sb.from('testimonials').insert({name,content,role:document.getElementById('tr').value.trim(),stars:document.getElementById('ts').value});
+  await loadTestimonials();['tn','tr','tt'].forEach(i=>document.getElementById(i).value='');showToast('✅ تم إضافة الشهادة');renderOwnerTesti();
+}
+function renderOwnerTesti(){document.getElementById('o-testi-list').innerHTML=testimonials.map(t=>`<div class="pli"><div style="width:38px;height:38px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--bg);font-weight:700;flex-shrink:0;">${(t.name||'?').charAt(0)}</div><div class="pli-info"><div class="pli-title">${t.name}</div><div class="pli-cat">${t.stars} · ${t.role||''}</div></div><button class="btn-del" onclick="delTesti(${t.id})">🗑</button></div>`).join('');}
+async function delTesti(id){if(!confirm('حذف؟'))return;await sb.from('testimonials').delete().eq('id',id);await loadTestimonials();renderOwnerTesti();showToast('🗑 تم الحذف');}
+
+// ══ USERS ══
+function renderUsersList(){document.getElementById('o-users-list').innerHTML=users.length?users.map(u=>`<div class="pli"><div style="width:38px;height:38px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--bg);font-weight:700;flex-shrink:0;">${(u.name||'?').charAt(0)}</div><div class="pli-info"><div class="pli-title">${u.name||''}</div><div class="pli-cat">${u.phone||''} · ${u.email||''}</div></div>${u.phone?`<a class="mbtn mbtn-wa" href="https://wa.me/${u.phone.replace(/\D/g,'')}" target="_blank">💬</a>`:''}</div>`).join(''):'<div class="empty-st"><span class="ei">👥</span>لا يوجد مستخدمون بعد</div>';}
+
+// ══ SETTINGS ══
+async function saveSettings(){
+  const ph=document.getElementById('sph').value.trim(),em=document.getElementById('sem').value.trim(),adr=document.getElementById('sadr').value.trim(),pw=document.getElementById('spw').value;
+  const upd={};if(ph)upd.phone=ph;if(em)upd.email=em;if(adr)upd.address=adr;if(pw)upd.owner_password=pw;
+  await sb.from('site_settings').update(upd).eq('id',1);await loadSettings();document.getElementById('spw').value='';showToast('✅ تم حفظ الإعدادات');
+}
+
+// ══ TOAST ══
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
+
+// ══ UPDATE DB DEFAULTS IF STILL OMRANI ══
+async function updateNameIfNeeded(){
+  try{
+    const{data}=await sb.from('site_settings').select('engineer_name,site_name').eq('id',1).single();
+    if(data){
+      const upd={};
+      if(!data.engineer_name||data.engineer_name.includes('أحمد')||data.engineer_name.includes('OMRANI'))upd.engineer_name='م. سامح أبوزيد';
+      if(!data.site_name||data.site_name==='OMRANI')upd.site_name='ABOZAID';
+      if(Object.keys(upd).length>0)await sb.from('site_settings').update(upd).eq('id',1);
+    }
+  }catch(e){}
+}
+
+// ══ START ══
+renderSvcGrids();
+updateNameIfNeeded();
+init();
+</script>
+</body>
+</html>
